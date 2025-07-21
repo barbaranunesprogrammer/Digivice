@@ -1,0 +1,264 @@
+/* Estilo padrão para os cards de Digimon na lista principal */
+.digimon-card {
+  background-color: #5a5a5a; /* cinza neutro */
+  color: #fff; /* texto branco */
+}
+
+/* Estilos para os Níveis de Digimon */
+.rookie {
+  background-color: #f7a23b; /* Laranja */
+  color: #000;
+}
+.champion {
+  background-color: #e64a4a; /* Vermelho */
+}
+.ultimate {
+  background-color: #a85cf9; /* Roxo */
+}
+.mega {
+  background-color: #ffd700; /* Dourado */
+  color: #000;
+}
+.in-training {
+  background-color: #82cafa; /* Azul claro */
+  color: #000;
+}
+.fresh {
+  background-color: #a1fca1; /* Verde claro */
+  color: #000;
+}
+.armor {
+    background-color: #c0c0c0; /* Prata */
+    color: #000;
+}
+
+/* Título */
+.content h1 {
+  margin: 0 0 1rem 0;
+  color: red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Indicador de Carregamento (Spinner) */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.spinner {
+  border: 8px solid #f3f3f3; /* Cinza claro */
+  border-top: 8px solid #6f38f6; /* Roxo */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Lista de digimons */
+.digimons {
+  display: grid;
+  grid-template-columns: 1fr;
+  list-style: none;
+  margin: 0;
+  padding: 5px;
+  gap: 1rem;
+  color: #000;
+  border: solid 5px #000;
+  border-radius: 30px;
+}
+
+/* Card digimon */
+.digimon {
+  margin: 0.5rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  border-radius: 1rem;
+  border: solid 2px #000;
+  cursor: pointer;
+  
+  /* Para garantir que o texto herde a cor da classe de nível */
+  color: inherit;
+}
+
+/* REMOVIDO color: #fff; para que herde do pai (.digimon) */
+.digimon .name {
+  margin: 0 0 0.5rem 0;
+  font-weight: 700;
+  font-size: 1.2rem;
+  text-transform: capitalize;
+  /* Herdará a cor da classe do nível */
+}
+
+.digimon .detail {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.digimon .detail .types {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
+}
+
+.digimon .detail .types .type {
+  text-align: center;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  border-radius: 1rem;
+  filter: brightness(1.1);
+  color: inherit; /* Herda a cor do card (.rookie, .champion, etc) */
+}
+
+.digimon .detail img {
+  max-width: 100%;
+  max-height: 50px;
+  object-fit: contain;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  padding: 1rem;
+}
+
+.pagination button {
+  background-color: #6c79db;
+  border: none;
+  border-radius: 1rem;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  font-size: 0.625rem;
+  cursor: pointer;
+  margin: 0.25rem;
+}
+
+.pagination button:hover {
+  border: solid 1px red;
+}
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.input {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  border: solid 1px #000;
+  border-radius: 0.3rem;
+  color: #000;
+  padding: 0.25rem 2rem;
+  font-size: 1rem;
+  margin: 0.25rem;
+}
+
+.btnSearch,
+.btnClear {
+  border: solid 1px #000;
+  border-radius: 5px;
+  background-color: #1123ca;
+  color: #dcf006;
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  margin: 0.25rem;
+}
+
+.btnSearch:hover,
+.btnClear:hover {
+  border: solid 1px red;
+}
+.footer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 0;
+  background-color: #e2cc09;
+  box-sizing: border-box;
+}
+
+
+.footer-link {
+  border: solid 1px #000;
+  border-radius: 5px;
+  background-color: #1123ca;
+  color: #dcf006;
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  margin: 0.25rem;
+}
+
+/* Media Query Tablet (≥ 576px) */
+@media screen and (min-width: 576px) {
+  .digimons {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .content {
+    max-width: 576px;
+    margin: 0 auto;
+    height: 100vh;
+  }
+}
+
+/* Media Query Desktop (≥ 992px) */
+@media screen and (min-width: 992px) {
+  .digimons {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+
+  .content {
+    max-width: 992px;
+    margin: 1rem auto;
+    height: auto;
+    border-radius: 1rem;
+  }
+
+  body {
+    background-color: #f6f8fc;
+  }
+
+  .input {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    border: solid 1px #000;
+    border-radius: 0.3rem;
+    color: #000;
+    padding: 0.25rem 1rem;
+    font-size: 1rem;
+    text-align: left;
+    margin: 0.25rem;
+    width: 50%;
+  }
+
+  .input::placeholder {
+    text-align: left;
+  }
+}

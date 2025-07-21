@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-Br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digivice</title>
+
+    <!-- Link para o seu CSS (adicione seu arquivo de estilos aqui) -->
+    <link rel="stylesheet" href="assets/css/global.css">
+    <link rel="stylesheet" href="assets/css/digivice.css">
+</head>
+<body>
+    <section class="content">
+        <h1>Digivice</h1>
+
+        <!-- Seção de Busca -->
+        <div class="search-container">
+            <input type="text" class="input" placeholder="Buscar por nome ou nível...">
+            <button class="btnSearch">Buscar</button>
+            <button class="btnClear">Limpar</button>
+        </div>
+
+        <!-- Indicador de Carregamento -->
+        <div id="loadingIndicator" class="loading-container" style="display: none;">
+            <div class="spinner"></div>
+        </div>
+
+        <!-- Lista onde os Digimons serão exibidos -->
+        <ol id="digimonList" class="digimons">
+            <!-- Os Digimons serão inseridos aqui pelo JavaScript -->
+        </ol>
+
+        <!-- Seção de Paginação -->
+        <div class="pagination">
+            <button id="loadMoreButton" type="button">
+                Carregar Mais
+            </button>
+        </div>
+    </section>
+  <footer class="footer"><a target="_blank" class="footer-link" href="https://portfoliobarbara.vercel.app/">Check out my portfolio</a></footer>
+    <!-- Scripts carregados na ordem correta e com os caminhos certos -->
+    <script src="assets/js/digimon-models.js"></script>
+    <script src="assets/js/digimon-api.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

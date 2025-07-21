@@ -1,0 +1,19 @@
+* {
+    font-family: 'Roboto', sans-serif;
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background-color: #fff; /* cor base, pode alterar se quiser */
+    color: #000; /* cor base do texto */
+}
+
+.content {
+    padding: 1rem;
+    width: 100vw;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
