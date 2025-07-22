@@ -29,7 +29,6 @@ function digimonToLi(digimon) {
                     <li class="type"><strong>Level:</strong> ${level}</li>
                     <li class="type"><strong>Type:</strong> ${actualType}</li>
                     <li class="type"><strong>Attribute:</strong> ${attribute}</li>
-                    <li class="type"><strong>Class:</strong> ${type}</li>
                 </ol>
                 <img src="${photo}" alt="${digimon.name}">
             </div>
