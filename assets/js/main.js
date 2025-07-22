@@ -70,7 +70,7 @@ function searchDigimon() {
             const newHtml = filteredList.map(digimonToLi).join("");
             digimonList.innerHTML = newHtml;
         } else {
-            digimonList.innerHTML = `<li class="search-message">Nenhum Digimon encontrado.</li>`;
+            digimonList.innerHTML = `<li class="search-message">No Digimon found.</li>`;
         }
     });
 }
