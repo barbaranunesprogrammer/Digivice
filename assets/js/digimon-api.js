@@ -1,12 +1,11 @@
-// digiApi.js corrigido
+// digiApi.js otimizado para busca rápida
 
 const digiApi = {};
 
-// Cache para armazenar a lista completa de Digimons para a busca
-let allDigimonsCache = [];
-let isAllFetched = false;
+let allBasicDigimonsCache = [];
+let allDigimonsDetailCache = [];
+let isAllBasicFetched = false;
 
-// Converte o objeto de detalhes completo da API para o nosso modelo Digimon
 function convertFullDetailToDigimon(digiDetail) {
     const digimon = new Digimon();
     digimon.name = digiDetail.name;
@@ -19,124 +18,98 @@ function convertFullDetailToDigimon(digiDetail) {
     return digimon;
 }
 
-async function enrichDigimonList(digimonList, delay = 150) {
-    if (!digimonList || digimonList.length === 0) return [];
-    const enrichedList = [];
+async function fetchBasicDigimons() {
+    if (isAllBasicFetched) return allBasicDigimonsCache;
 
-    for (const digimon of digimonList) {
-        try {
-            const response = await fetch(`https://digi-api.com/api/v1/digimon/${digimon.name}`);
-            if (!response.ok) throw new Error(`Erro ao buscar Digimon: ${digimon.name}`);
-            const data = await response.json();
-            enrichedList.push(convertFullDetailToDigimon(data));
-        } catch (error) {
-            console.warn("Erro ao enriquecer Digimon:", digimon.name, error.message);
-        }
-        await new Promise(resolve => setTimeout(resolve, delay));
-    }
-
-    return enrichedList;
-}
-
-digiApi.getDigimons = async (page = 0, pageSize = 10) => {
-    const listUrl = `https://digi-api.com/api/v1/digimon?page=${page}&pageSize=${pageSize}`;
-    try {
-        const listResponse = await fetch(listUrl);
-        const listJson = await listResponse.json();
-        const enrichedContent = await enrichDigimonList(listJson.content);
-        return {
-            content: enrichedContent,
-            pageable: listJson.pageable
-        };
-    } catch (error) {
-        console.error("Falha ao buscar Digimons:", error);
-        return { content: [], pageable: {} };
-    }
-};
-
-const fetchAllDigimons = async () => {
-    if (isAllFetched) return Promise.resolve(allDigimonsCache);
-
-    console.log("Buscando a lista completa de Digimons para o cache de busca...");
-    let allDigimons = [];
-    let currentPageUrl = `https://digi-api.com/api/v1/digimon?pageSize=50`;
+    console.log("Buscando a lista básica de Digimons...");
+    let all = [];
+    let next = 'https://digi-api.com/api/v1/digimon?pageSize=100';
 
     try {
-        while (currentPageUrl) {
-            const response = await fetch(currentPageUrl);
-            const data = await response.json();
-            allDigimons = allDigimons.concat(data.content);
-            currentPageUrl = data.pageable.nextPage;
+        while (next) {
+            const res = await fetch(next);
+            const json = await res.json();
+            all = all.concat(json.content);
+            next = json.pageable?.nextPage;
         }
 
-        allDigimonsCache = await enrichDigimonList(allDigimons);
-        isAllFetched = true;
-        console.log(`Cache de busca preenchido com ${allDigimonsCache.length} Digimons.`);
-        return allDigimonsCache;
+        allBasicDigimonsCache = all;
+        isAllBasicFetched = true;
+        console.log(`Foram carregados ${all.length} Digimons básicos.`);
+        return all;
     } catch (error) {
-        console.error("Falha ao buscar todos os Digimons:", error);
+        console.error("Erro ao buscar Digimons básicos:", error);
         return [];
     }
-};
+}
 
-fetchAllDigimons();
-
-const searchDigimonsByName = async (query) => {
-    const fullList = await fetchAllDigimons();
-    return fullList.filter(digimon =>
-        digimon.name.toLowerCase().includes(query)
-    );
-};
-
-const digimonLevels = ['Fresh', 'In Training', 'Rookie', 'Champion', 'Ultimate', 'Mega', 'Armor', 'Hybrid', 'Unknown'];
-const digimonAttributes = ['Data', 'Free', 'Vaccine', 'Virus', 'Variable', 'Unknown'];
-const digimonTypes = [
-    'Amphibian', 'Ancient', 'Aquatic', 'Avian', 'Beast', 'Bird', 'Bulb', 'Composite', 'Crustacean', 'Cyborg', 'Demon', 'Dragon',
-    'Enhancement', 'Fairy', 'Fallen Angel', 'Food', 'Ghost', 'Giant', 'God', 'Holy', 'Insect', 'Larva', 'LCD', 'Machine', 'Magic',
-    'Mammal', 'Mineral', 'Minor', 'Mollusk', 'Mutant', 'Mythical', 'Plant', 'Puppet', 'Reptile', 'Rock', 'Sea Animal', 'Seed',
-    'Shaman', 'Skeleton', 'Slime', 'Undead', 'Unique', 'Unknown', 'Warrior', 'Wizard'
-];
+async function enrichDigimonList(digimonList) {
+    if (!digimonList || digimonList.length === 0) return [];
+    try {
+        const detailPromises = digimonList.map(digimon =>
+            fetch(`https://digi-api.com/api/v1/digimon/${digimon.name}`)
+                .then(res => res.ok ? res.json() : Promise.reject(`Falha ao buscar ${digimon.name}`))
+        );
+        const digimonDetails = await Promise.all(detailPromises);
+        return digimonDetails.map(convertFullDetailToDigimon);
+    } catch (error) {
+        console.error("Falha ao enriquecer a lista de Digimons:", error);
+        return [];
+    }
+}
 
 digiApi.performSearch = async (query) => {
-    const lowerCaseQuery = query.toLowerCase();
+    const lowerQuery = query.toLowerCase();
+    const allBasic = await fetchBasicDigimons();
 
-    const findCategory = (list) => list.find(item => item.toLowerCase() === lowerCaseQuery);
+    const digimonLevels = ['Fresh', 'In Training', 'Rookie', 'Champion', 'Ultimate', 'Mega', 'Armor', 'Hybrid', 'Unknown'];
+    const digimonAttributes = ['Data', 'Free', 'Vaccine', 'Virus', 'Variable', 'Unknown'];
+    const digimonTypes = [
+        'Amphibian', 'Ancient', 'Aquatic', 'Avian', 'Beast', 'Bird', 'Bulb', 'Composite', 'Crustacean', 'Cyborg', 'Demon', 'Dragon',
+        'Enhancement', 'Fairy', 'Fallen Angel', 'Food', 'Ghost', 'Giant', 'God', 'Holy', 'Insect', 'Larva', 'LCD', 'Machine', 'Magic',
+        'Mammal', 'Mineral', 'Minor', 'Mollusk', 'Mutant', 'Mythical', 'Plant', 'Puppet', 'Reptile', 'Rock', 'Sea Animal', 'Seed',
+        'Shaman', 'Skeleton', 'Slime', 'Undead', 'Unique', 'Unknown', 'Warrior', 'Wizard'
+    ];
 
-    const level = findCategory(digimonLevels);
-    const attribute = findCategory(digimonAttributes);
-    const type = findCategory(digimonTypes);
+    const isCategory = (list) => list.find(item => item.toLowerCase() === lowerQuery);
+
+    const level = isCategory(digimonLevels);
+    const attribute = isCategory(digimonAttributes);
+    const type = isCategory(digimonTypes);
 
     let url;
     let categoryValue;
 
     if (level) {
         categoryValue = level;
-        url = `https://digi-api.com/api/v1/digimon?level=${encodeURIComponent(categoryValue)}&pageSize=200`;
+        url = `https://digi-api.com/api/v1/digimon?level=${encodeURIComponent(categoryValue)}&pageSize=50`;
     } else if (attribute) {
         categoryValue = attribute;
-        url = `https://digi-api.com/api/v1/digimon?attribute=${encodeURIComponent(categoryValue)}&pageSize=200`;
+        url = `https://digi-api.com/api/v1/digimon?attribute=${encodeURIComponent(categoryValue)}&pageSize=50`;
     } else if (type) {
         categoryValue = type;
-        url = `https://digi-api.com/api/v1/digimon?type=${encodeURIComponent(categoryValue)}&pageSize=200`;
+        url = `https://digi-api.com/api/v1/digimon?type=${encodeURIComponent(categoryValue)}&pageSize=50`;
     }
 
     if (url) {
         console.log(`Buscando por categoria: ${categoryValue}`);
         try {
-            const categoryResponse = await fetch(url);
-            if (!categoryResponse.ok) throw new Error(`Erro na busca por categoria: ${categoryResponse.status}`);
-            const categoryJson = await categoryResponse.json();
-            const enrichedList = await enrichDigimonList(categoryJson.content);
-
-            console.log(`Foram encontrados ${enrichedList.length} Digimons na categoria "${categoryValue}".`);
-
-            return enrichedList;
-        } catch (error) {
-            console.error(error);
+            const res = await fetch(url);
+            const json = await res.json();
+            const enriched = await enrichDigimonList(json.content);
+            console.log(`Foram encontrados ${enriched.length} Digimons na categoria "${categoryValue}".`);
+            return enriched;
+        } catch (e) {
+            console.error(e);
             return [];
         }
     }
 
-    const nameResults = await searchDigimonsByName(lowerCaseQuery);
-    return nameResults;
+    // Busca rápida local por nome
+    const filtered = allBasic.filter(d => d.name.toLowerCase().includes(lowerQuery));
+    const limited = filtered.slice(0, 20);
+    console.log(`Busca rápida encontrou ${filtered.length} digimons. Mostrando os primeiros ${limited.length}.`);
+    return enrichDigimonList(limited);
 };
+
+export default digiApi;
