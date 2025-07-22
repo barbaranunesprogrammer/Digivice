@@ -124,9 +124,12 @@
 }
 
 .digimon .detail img {
-  max-width: 100%;
-  max-height: 120px;
+  width: 100px;
+  height: 100px;
   object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+  align-self: center;
 }
 
 /* Paginação */
