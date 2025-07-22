@@ -108,6 +108,28 @@
 .voltar:hover {
   border: solid 1px red;
 }
+.footer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 0;
+  background-color: #e2cc09;
+  box-sizing: border-box;
+}
+
+
+.footer-link {
+  border: solid 1px #000;
+  border-radius: 5px;
+  background-color: #1123ca;
+  color: #dcf006;
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  margin: 0.25rem;
+}
 
 /* Media Query para telas maiores (Tablet/Desktop) */
 @media screen and (min-width: 576px) {
