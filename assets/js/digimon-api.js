@@ -1,5 +1,3 @@
-// digiApi.js otimizado para busca rápida
-
 const digiApi = {};
 
 let allBasicDigimonsCache = [];
@@ -112,5 +110,7 @@ digiApi.performSearch = async (query) => {
     return enrichDigimonList(limited);
 };
 
-// ⚠️ Torna disponível globalmente para o main.js
+// 🔓 Disponibiliza tudo no objeto digiApi
+digiApi.fetchBasicDigimons = fetchBasicDigimons;
+digiApi.enrichDigimonList = enrichDigimonList;
 window.digiApi = digiApi;
