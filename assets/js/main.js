@@ -17,11 +17,10 @@ function digimonToLi(digimon) {
     const level = digimon.level || digimon.levels?.[0]?.level || "Unknown";
     const actualType = digimon.actualType || "Unknown";
     const attribute = digimon.attribute || "Unknown";
-    const type = digimon.type || "unknown"; // Corrigido aqui
+    const type = digimon.type || "unknown";
     const photo = digimon.photo || "https://via.placeholder.com/150";
 
     return `
-       <li class="digimon ${type}" data-digimon-name="${digimon.name}">
         <li class="digimon ${type}" data-digimon-name="${digimon.name}">
             <span class="name">${digimon.name}</span>
             <div class="detail">
@@ -29,14 +28,12 @@ function digimonToLi(digimon) {
                     <li class="type"><strong>Level:</strong> ${level}</li>
                     <li class="type"><strong>Type:</strong> ${actualType}</li>
                     <li class="type"><strong>Attribute:</strong> ${attribute}</li>
-                    <li class="type"><strong>Class:</strong> ${type}</li>
                 </ol>
                 <img src="${photo}" alt="${digimon.name}">
             </div>
         </li>
     `;
 }
-
 
 // --- Funções Principais ---
 
@@ -94,7 +91,6 @@ function clearSearch() {
 }
 
 // --- Event Listeners ---
-
 searchInput.addEventListener("keypress", (event) => {
     if (event.key === "Enter") {
         searchDigimon();
