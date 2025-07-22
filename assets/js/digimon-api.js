@@ -111,3 +111,6 @@ digiApi.performSearch = async (query) => {
     console.log(`Busca rápida encontrou ${filtered.length} digimons. Mostrando os primeiros ${limited.length}.`);
     return enrichDigimonList(limited);
 };
+
+// ⚠️ Torna disponível globalmente para o main.js
+window.digiApi = digiApi;
