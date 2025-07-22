@@ -1,4 +1,3 @@
-// --- Elementos do DOM ---
 const loadMoreButton = document.getElementById("loadMoreButton");
 const digimonList = document.getElementById("digimonList");
 const searchInput = document.querySelector(".input");
@@ -21,7 +20,8 @@ function digimonToLi(digimon) {
     const type = digimon.type || "unknown"; // Corrigido aqui
     const photo = digimon.photo || "https://via.placeholder.com/150";
 
-    return 
+    return `
+       <li class="digimon ${type}" data-digimon-name="${digimon.name}">
         <li class="digimon ${type}" data-digimon-name="${digimon.name}">
             <span class="name">${digimon.name}</span>
             <div class="detail">
@@ -29,11 +29,12 @@ function digimonToLi(digimon) {
                     <li class="type"><strong>Level:</strong> ${level}</li>
                     <li class="type"><strong>Type:</strong> ${actualType}</li>
                     <li class="type"><strong>Attribute:</strong> ${attribute}</li>
+                    <li class="type"><strong>Class:</strong> ${type}</li>
                 </ol>
                 <img src="${photo}" alt="${digimon.name}">
             </div>
         </li>
-    ;
+    `;
 }
 
 
@@ -77,7 +78,7 @@ function searchDigimon() {
             const newHtml = filteredList.map(digimonToLi).join("");
             digimonList.innerHTML = newHtml;
         } else {
-            digimonList.innerHTML = <li class="search-message">No Digimon found.</li>;
+            digimonList.innerHTML = `<li class="search-message">No Digimon found.</li>`;
         }
     });
 }
@@ -103,7 +104,7 @@ searchInput.addEventListener("keypress", (event) => {
 digimonList.addEventListener('click', (event) => {
     const listItem = event.target.closest('.digimon');
     if (listItem && listItem.dataset.digimonName) {
-        window.location.href = digivice.html?digimon=${listItem.dataset.digimonName};
+        window.location.href = `digivice.html?digimon=${listItem.dataset.digimonName}`;
     }
 });
 
@@ -115,4 +116,4 @@ loadMoreButton.addEventListener("click", () => {
 });
 
 // --- Carga Inicial ---
-loadDigimonItems(currentPage, pageSize);  atualiza dentro desse main
+loadDigimonItems(currentPage, pageSize);
