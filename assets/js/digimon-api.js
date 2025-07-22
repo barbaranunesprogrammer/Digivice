@@ -117,18 +117,22 @@ digiApi.performSearch = async (query) => {
         url = `https://digi-api.com/api/v1/digimon?type=${encodeURIComponent(categoryValue)}&pageSize=50`;
     }
 
-    if (url) {
-        console.log(`Buscando por categoria: ${categoryValue}`);
-        try {
-            const categoryResponse = await fetch(url);
-            if (!categoryResponse.ok) throw new Error(`Erro na busca por categoria: ${categoryResponse.status}`);
-            const categoryJson = await categoryResponse.json();
-            return enrichDigimonList(categoryJson.content);
-        } catch (error) {
-            console.error(error);
-            return [];
-        }
+  f (url) {
+    console.log(`Buscando por categoria: ${categoryValue}`);
+    try {
+        const categoryResponse = await fetch(url);
+        if (!categoryResponse.ok) throw new Error(`Erro na busca por categoria: ${categoryResponse.status}`);
+        const categoryJson = await categoryResponse.json();
+        const enrichedList = await enrichDigimonList(categoryJson.content);
+        
+        console.log(`Foram encontrados ${enrichedList.length} Digimons na categoria "${categoryValue}".`);
+        
+        return enrichedList;
+    } catch (error) {
+        console.error(error);
+        return [];
     }
+}
 
     const nameResults = await searchDigimonsByName(lowerCaseQuery);
     return nameResults;
