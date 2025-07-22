@@ -1,56 +1,44 @@
-/* Estilo padrão para os cards de Digimon na lista principal */
 .digimon-card {
-  background-color: #5a5a5a; /* cinza neutro */
-  color: #fff; /* texto branco */
+  background-color: #5a5a5a;
+  color: #fff;
 }
 
-.child { /* Rookie */
-  background-color: #fbbc04; /* Amarelo suave */
+.child {
+  background-color: #fbbc04;
   color: #1a1a1a;
 }
 
-.baby-ii, .baby-i { /* In-training e Fresh */
-  background-color: #a0e7e5; /* Azul água */
+.baby-ii, .baby-i {
+  background-color: #a0e7e5;
   color: #0f2b33;
 }
 
-.adult { /* Champion */
-  background-color: #ff6b6b; /* Coral/Vermelho */
+.adult {
+  background-color: #ff6b6b;
   color: #fff;
 }
 
-.perfect { /* Ultimate */
-  background-color: #9d4edd; /* Roxo violeta */
+.perfect {
+  background-color: #9d4edd;
   color: #fff;
 }
 
-.ultimate { /* Mega */
-  background-color: #ffd166; /* Dourado quente */
+.ultimate {
+  background-color: #ffd166;
   color: #1a1a1a;
 }
 
 .armor {
-  background-color: #c9c9c9; /* Prata fosco */
+  background-color: #c9c9c9;
   color: #000;
 }
 
 .unknown {
-  background-color: #b0bec5; /* Cinza neutro */
+  background-color: #b0bec5;
   color: #000;
 }
 
-
-/* Título */
-.content h1 {
-  margin: 0 0 1rem 0;
-  color: red;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-/* Indicador de Carregamento (Spinner) */
+/* Indicador de Carregamento */
 .loading-container {
   display: flex;
   justify-content: center;
@@ -58,8 +46,8 @@
 }
 
 .spinner {
-  border: 8px solid #f3f3f3; /* Cinza claro */
-  border-top: 8px solid #6f38f6; /* Roxo */
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #6f38f6;
   border-radius: 50%;
   width: 60px;
   height: 60px;
@@ -71,7 +59,7 @@
   100% { transform: rotate(360deg); }
 }
 
-/* Lista de digimons */
+/* Lista */
 .digimons {
   display: grid;
   grid-template-columns: 1fr;
@@ -84,27 +72,30 @@
   border-radius: 30px;
 }
 
-/* Card digimon */
+/* Card Digimon */
 .digimon {
   margin: 0.5rem;
   padding: 1rem;
   display: flex;
   flex-direction: column;
   border-radius: 1rem;
-  border: solid 2px #000;
+  border: solid 1px #ccc;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  
-  /* Para garantir que o texto herde a cor da classe de nível */
+  transition: all 0.3s ease-in-out;
   color: inherit;
 }
 
-/* REMOVIDO color: #fff; para que herde do pai (.digimon) */
+.digimon:hover {
+  transform: scale(1.02);
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
 .digimon .name {
   margin: 0 0 0.5rem 0;
   font-weight: 700;
   font-size: 1.2rem;
   text-transform: capitalize;
-  /* Herdará a cor da classe do nível */
 }
 
 .digimon .detail {
@@ -129,7 +120,7 @@
   font-size: 0.8rem;
   border-radius: 1rem;
   filter: brightness(1.1);
-  color: inherit; /* Herda a cor do card (.rookie, .champion, etc) */
+  color: inherit;
 }
 
 .digimon .detail img {
@@ -138,30 +129,32 @@
   object-fit: contain;
 }
 
+/* Paginação */
 .pagination {
   display: flex;
   justify-content: center;
-  flex-direction: row;
   align-items: center;
   width: 100%;
   padding: 1rem;
 }
 
 .pagination button {
-  background-color: #6c79db;
+  background-color: #3b4cca;
   border: none;
   border-radius: 1rem;
-  color: #fff;
+  color: #fff700;
   padding: 0.5rem 1rem;
-  font-size: 0.625rem;
+  font-size: 0.7rem;
   cursor: pointer;
   margin: 0.25rem;
+  transition: all 0.3s ease-in-out;
 }
 
 .pagination button:hover {
   border: solid 1px red;
 }
 
+/* Busca */
 .search-container {
   display: flex;
   justify-content: center;
@@ -172,13 +165,10 @@
 }
 
 .input {
-  display: flex;
-  justify-content: center;
-  flex-direction: row;
   border: solid 1px #000;
   border-radius: 0.3rem;
   color: #000;
-  padding: 0.25rem 2rem;
+  padding: 0.5rem 1rem;
   font-size: 1rem;
   margin: 0.25rem;
 }
@@ -187,18 +177,21 @@
 .btnClear {
   border: solid 1px #000;
   border-radius: 5px;
-  background-color: #1123ca;
-  color: #dcf006;
+  background-color: #3b4cca;
+  color: #fff700;
   padding: 0.5rem 1rem;
   font-size: 0.8rem;
   cursor: pointer;
   margin: 0.25rem;
+  transition: all 0.3s ease-in-out;
 }
 
 .btnSearch:hover,
 .btnClear:hover {
   border: solid 1px red;
 }
+
+/* Footer */
 .footer {
   width: 100%;
   display: flex;
@@ -210,19 +203,18 @@
   box-sizing: border-box;
 }
 
-
 .footer-link {
   border: solid 1px #000;
   border-radius: 5px;
-  background-color: #1123ca;
-  color: #dcf006;
+  background-color: #3b4cca;
+  color: #fff700;
   padding: 0.5rem 1rem;
   font-size: 0.8rem;
   cursor: pointer;
   margin: 0.25rem;
 }
 
-/* Media Query Tablet (≥ 576px) */
+/* Responsivo - Tablet */
 @media screen and (min-width: 576px) {
   .digimons {
     grid-template-columns: 1fr 1fr;
@@ -235,7 +227,7 @@
   }
 }
 
-/* Media Query Desktop (≥ 992px) */
+/* Responsivo - Desktop */
 @media screen and (min-width: 992px) {
   .digimons {
     grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -253,16 +245,6 @@
   }
 
   .input {
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: row;
-    border: solid 1px #000;
-    border-radius: 0.3rem;
-    color: #000;
-    padding: 0.25rem 1rem;
-    font-size: 1rem;
-    text-align: left;
-    margin: 0.25rem;
     width: 50%;
   }
 
