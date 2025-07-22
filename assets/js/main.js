@@ -11,8 +11,6 @@ const pageSize = 15;
 let isSearchActive = false;
 
 // --- Funções auxiliares ---
-
-// Gera o HTML para um item da lista de Digimon
 function digimonToLi(digimon) {
     const level = digimon.level || digimon.levels?.[0]?.level || "Unknown";
     const actualType = digimon.actualType || "Unknown";
@@ -35,27 +33,31 @@ function digimonToLi(digimon) {
     `;
 }
 
-// --- Funções Principais ---
-
-// Carrega os itens de Digimon com paginação
+// --- Carrega os Digimons com paginação ---
 function loadDigimonItems(page, size) {
     if (isSearchActive) return;
 
     loadingIndicator.style.display = "block";
 
-    digiApi.getDigimons(page, size).then((response) => {
+    digiApi.fetchBasicDigimons().then(all => {
         loadingIndicator.style.display = "none";
-        const newHtml = response.content.map(digimonToLi).join("");
-        digimonList.innerHTML += newHtml;
 
-        const hasNextPage = response.pageable && response.pageable.nextPage;
-        if (!hasNextPage) {
-            loadMoreButton.style.display = "none";
-        }
+        const start = page * size;
+        const end = start + size;
+        const pageItems = all.slice(start, end);
+
+        digiApi.enrichDigimonList(pageItems).then(enriched => {
+            const newHtml = enriched.map(digimonToLi).join("");
+            digimonList.innerHTML += newHtml;
+
+            if (end >= all.length) {
+                loadMoreButton.style.display = "none";
+            }
+        });
     });
 }
 
-// Realiza uma busca na lista de Digimons
+// --- Busca Digimons ---
 function searchDigimon() {
     const query = searchInput.value.trim().toLowerCase();
 
@@ -75,12 +77,12 @@ function searchDigimon() {
             const newHtml = filteredList.map(digimonToLi).join("");
             digimonList.innerHTML = newHtml;
         } else {
-            digimonList.innerHTML = `<li class="search-message">No Digimon found.</li>`;
+            digimonList.innerHTML = `<li class="search-message">Nenhum Digimon encontrado.</li>`;
         }
     });
 }
 
-// Limpa os resultados da busca e restaura a lista paginada
+// --- Limpa busca ---
 function clearSearch() {
     searchInput.value = "";
     digimonList.innerHTML = "";
@@ -90,17 +92,10 @@ function clearSearch() {
     loadDigimonItems(currentPage, pageSize);
 }
 
-// --- Event Listeners ---
+// --- Eventos ---
 searchInput.addEventListener("keypress", (event) => {
     if (event.key === "Enter") {
         searchDigimon();
-    }
-});
-
-digimonList.addEventListener('click', (event) => {
-    const listItem = event.target.closest('.digimon');
-    if (listItem && listItem.dataset.digimonName) {
-        window.location.href = `digivice.html?digimon=${listItem.dataset.digimonName}`;
     }
 });
 
@@ -111,5 +106,12 @@ loadMoreButton.addEventListener("click", () => {
     loadDigimonItems(currentPage, pageSize);
 });
 
-// --- Carga Inicial ---
+digimonList.addEventListener("click", (event) => {
+    const listItem = event.target.closest(".digimon");
+    if (listItem && listItem.dataset.digimonName) {
+        window.location.href = `digivice.html?digimon=${listItem.dataset.digimonName}`;
+    }
+});
+
+// --- Inicial ---
 loadDigimonItems(currentPage, pageSize);
