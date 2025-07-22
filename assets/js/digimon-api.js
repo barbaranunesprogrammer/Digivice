@@ -111,13 +111,13 @@ digiApi.performSearch = async (query) => {
 
     if (level) {
         categoryValue = level;
-        url = `https://digi-api.com/api/v1/digimon?level=${encodeURIComponent(categoryValue)}&pageSize=90`;
+        url = `https://digi-api.com/api/v1/digimon?level=${encodeURIComponent(categoryValue)}&pageSize=200`;
     } else if (attribute) {
         categoryValue = attribute;
-        url = `https://digi-api.com/api/v1/digimon?attribute=${encodeURIComponent(categoryValue)}&pageSize=90`;
+        url = `https://digi-api.com/api/v1/digimon?attribute=${encodeURIComponent(categoryValue)}&pageSize=200`;
     } else if (type) {
         categoryValue = type;
-        url = `https://digi-api.com/api/v1/digimon?type=${encodeURIComponent(categoryValue)}&pageSize=90`;
+        url = `https://digi-api.com/api/v1/digimon?type=${encodeURIComponent(categoryValue)}&pageSize=200`;
     }
 
     if (url) {
