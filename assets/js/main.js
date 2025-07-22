@@ -15,8 +15,14 @@ let isSearchActive = false;
 
 // Gera o HTML para um item da lista de Digimon
 function digimonToLi(digimon) {
+    const level = digimon.level || digimon.levels?.[0]?.level || "Unknown";
+    const actualType = digimon.actualType || "Unknown";
+    const attribute = digimon.attribute || "Unknown";
+    const type = digimon.type || "unknown"; // Corrigido aqui
+    const photo = digimon.photo || "https://via.placeholder.com/150";
+
     return `
-       <li class="digimon ${type}" data-digimon-name="${digimon.name}">
+        <li class="digimon ${type}" data-digimon-name="${digimon.name}">
             <span class="name">${digimon.name}</span>
             <div class="detail">
                 <ol class="types">
@@ -30,6 +36,7 @@ function digimonToLi(digimon) {
         </li>
     `;
 }
+
 
 // --- Funções Principais ---
 
