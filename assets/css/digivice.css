@@ -5,34 +5,36 @@
 }
 
 /* Estilos para os Níveis de Digimon */
-.rookie {
-  background-color: #f7a23b; /* Laranja */
+.child {
+  background-color: #f7a23b; /* Laranja (Rookie) */
   color: #000;
 }
-.champion {
-  background-color: #e64a4a; /* Vermelho */
+
+.baby-ii {
+  background-color: #a1fca1; /* Verde claro (Fresh ou In-training) */
+  color: #000;
+}
+
+.baby-i {
+  background-color: #a1fca1;
+  color: #000;
+}
+
+.adult {
+  background-color: #e64a4a; /* Champion */
   color: #fff;
 }
+
+.perfect {
+  background-color: #a85cf9; /* Ultimate */
+  color: #fff;
+}
+
 .ultimate {
-  background-color: #a85cf9; /* Roxo */
-  color: #fff;
-}
-.mega {
-  background-color: #ffd700; /* Dourado */
+  background-color: #ffd700; /* Mega */
   color: #000;
 }
-.in-training {
-  background-color: #82cafa; /* Azul claro */
-  color: #000;
-}
-.fresh {
-  background-color: #a1fca1; /* Verde claro */
-  color: #000;
-}
-.armor {
-    background-color: #c0c0c0; /* Prata */
-    color: #000;
-}
+
 
 /* Título */
 .content h1 {
