@@ -16,15 +16,16 @@ let isSearchActive = false;
 // Gera o HTML para um item da lista de Digimon
 function digimonToLi(digimon) {
     return `
-        <li class="digimon ${digimon.type}" data-digimon-name="${digimon.name}">
+       <li class="digimon ${type}" data-digimon-name="${digimon.name}">
             <span class="name">${digimon.name}</span>
             <div class="detail">
                 <ol class="types">
-                    <li class="type">${digimon.level}</li>
-                    <li class="type">${digimon.actualType}</li>
-                    <li class="type">${digimon.attribute}</li>
+                    <li class="type"><strong>Level:</strong> ${level}</li>
+                    <li class="type"><strong>Type:</strong> ${actualType}</li>
+                    <li class="type"><strong>Attribute:</strong> ${attribute}</li>
+                    <li class="type"><strong>Class:</strong> ${type}</li>
                 </ol>
-                <img src="${digimon.photo}" alt="${digimon.name}">
+                <img src="${photo}" alt="${digimon.name}">
             </div>
         </li>
     `;
