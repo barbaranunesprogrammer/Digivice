@@ -233,7 +233,7 @@
 /* Responsivo - Desktop */
 @media screen and (min-width: 992px) {
   .digimons {
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
   }
 
   .content {
