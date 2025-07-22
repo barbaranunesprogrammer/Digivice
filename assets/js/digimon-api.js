@@ -1,13 +1,13 @@
 const digiApi = {};
 
 let allBasicDigimonsCache = [];
-let allDigimonsDetailCache = [];
 let isAllBasicFetched = false;
 
+// Classe utilitária opcional
 function convertFullDetailToDigimon(digiDetail) {
     const digimon = new Digimon();
     digimon.name = digiDetail.name;
-    digimon.photo = digiDetail.images?.[0]?.href;
+    digimon.photo = digiDetail.images?.[0]?.href || "";
     digimon.level = digiDetail.levels?.[0]?.level || 'Unknown';
     digimon.actualType = digiDetail.types?.[0]?.type || 'Unknown';
     digimon.attribute = digiDetail.attributes?.[0]?.attribute || 'Unknown';
@@ -16,10 +16,10 @@ function convertFullDetailToDigimon(digiDetail) {
     return digimon;
 }
 
+// 🔄 Carrega todos os Digimons (básico)
 async function fetchBasicDigimons() {
     if (isAllBasicFetched) return allBasicDigimonsCache;
 
-    console.log("Buscando a lista básica de Digimons...");
     let all = [];
     let next = 'https://digi-api.com/api/v1/digimon?pageSize=100';
 
@@ -33,7 +33,6 @@ async function fetchBasicDigimons() {
 
         allBasicDigimonsCache = all;
         isAllBasicFetched = true;
-        console.log(`Foram carregados ${all.length} Digimons básicos.`);
         return all;
     } catch (error) {
         console.error("Erro ao buscar Digimons básicos:", error);
@@ -41,21 +40,23 @@ async function fetchBasicDigimons() {
     }
 }
 
+// 🔍 Busca e adiciona detalhes aos Digimons
 async function enrichDigimonList(digimonList) {
     if (!digimonList || digimonList.length === 0) return [];
     try {
         const detailPromises = digimonList.map(digimon =>
             fetch(`https://digi-api.com/api/v1/digimon/${digimon.name}`)
-                .then(res => res.ok ? res.json() : Promise.reject(`Falha ao buscar ${digimon.name}`))
+                .then(res => res.ok ? res.json() : Promise.reject(`Erro ao buscar ${digimon.name}`))
         );
         const digimonDetails = await Promise.all(detailPromises);
         return digimonDetails.map(convertFullDetailToDigimon);
     } catch (error) {
-        console.error("Falha ao enriquecer a lista de Digimons:", error);
+        console.error("Erro ao enriquecer lista:", error);
         return [];
     }
 }
 
+// 🔍 Busca por nome, nível, tipo ou atributo
 digiApi.performSearch = async (query) => {
     const lowerQuery = query.toLowerCase();
     const allBasic = await fetchBasicDigimons();
@@ -90,27 +91,46 @@ digiApi.performSearch = async (query) => {
     }
 
     if (url) {
-        console.log(`Buscando por categoria: ${categoryValue}`);
         try {
             const res = await fetch(url);
             const json = await res.json();
             const enriched = await enrichDigimonList(json.content);
-            console.log(`Foram encontrados ${enriched.length} Digimons na categoria "${categoryValue}".`);
             return enriched;
         } catch (e) {
-            console.error(e);
+            console.error("Erro na busca por categoria:", e);
             return [];
         }
     }
 
-    // Busca rápida local por nome
+    // 🔎 Filtro por nome
     const filtered = allBasic.filter(d => d.name.toLowerCase().includes(lowerQuery));
     const limited = filtered.slice(0, 20);
-    console.log(`Busca rápida encontrou ${filtered.length} digimons. Mostrando os primeiros ${limited.length}.`);
     return enrichDigimonList(limited);
 };
 
-// 🔓 Disponibiliza tudo no objeto digiApi
+// 🔢 Função de paginação para uso inicial
+async function fetchPaginatedDigimons(page = 0, size = 15) {
+    const url = `https://digi-api.com/api/v1/digimon?page=${page}&pageSize=${size}`;
+    try {
+        const res = await fetch(url);
+        const json = await res.json();
+        return {
+            content: json.content,
+            totalPages: json.pageable?.totalPages || 100
+        };
+    } catch (error) {
+        console.error("Erro ao buscar Digimons paginados:", error);
+        return {
+            content: [],
+            totalPages: 0
+        };
+    }
+}
+
+// 📤 Exporta para uso no main.js
 digiApi.fetchBasicDigimons = fetchBasicDigimons;
 digiApi.enrichDigimonList = enrichDigimonList;
+digiApi.fetchPaginatedDigimons = fetchPaginatedDigimons;
+
+// Torna acessível globalmente
 window.digiApi = digiApi;
