@@ -11,14 +11,23 @@ let currentPage = 0;
 const pageSize = 15;
 let isSearchActive = false;
 
+// --- Categorias conhecidas ---
+const digimonLevels = ['Fresh', 'In Training', 'Rookie', 'Champion', 'Ultimate', 'Mega', 'Armor', 'Hybrid', 'Unknown'];
+const digimonAttributes = ['Data', 'Free', 'Vaccine', 'Virus', 'Variable', 'Unknown'];
+const digimonTypes = [
+    'Amphibian', 'Ancient', 'Aquatic', 'Avian', 'Beast', 'Bird', 'Bulb', 'Composite', 'Crustacean', 'Cyborg', 'Demon', 'Dragon',
+    'Enhancement', 'Fairy', 'Fallen Angel', 'Food', 'Ghost', 'Giant', 'God', 'Holy', 'Insect', 'Larva', 'LCD', 'Machine', 'Magic',
+    'Mammal', 'Mineral', 'Minor', 'Mollusk', 'Mutant', 'Mythical', 'Plant', 'Puppet', 'Reptile', 'Rock', 'Sea Animal', 'Seed',
+    'Shaman', 'Skeleton', 'Slime', 'Undead', 'Unique', 'Unknown', 'Warrior', 'Wizard'
+];
+
 // --- Funções auxiliares ---
 
-// Gera o HTML para um item da lista de Digimon
 function digimonToLi(digimon) {
     const level = digimon.level || digimon.levels?.[0]?.level || "Unknown";
     const actualType = digimon.actualType || "Unknown";
     const attribute = digimon.attribute || "Unknown";
-    const type = digimon.type || "unknown"; // Corrigido aqui
+    const type = digimon.type || "unknown";
     const photo = digimon.photo || "https://via.placeholder.com/150";
 
     return `
@@ -36,10 +45,56 @@ function digimonToLi(digimon) {
     `;
 }
 
+function enrichDigimonList(list) {
+    return list.map(item => ({
+        name: item.name,
+        level: item.levels?.[0]?.level || "Unknown",
+        actualType: item.types?.[0]?.type || "Unknown",
+        attribute: item.attributes?.[0]?.attribute || "Unknown",
+        photo: item.images?.[0]?.href || "https://via.placeholder.com/150",
+    }));
+}
+
+// Busca em todas as páginas até terminar
+async function fetchAllFromCategory(category, value) {
+    let results = [];
+    let url = `https://digi-api.com/api/v1/digimon?${category}=${encodeURIComponent(value)}&pageSize=50`;
+
+    while (url) {
+        const res = await fetch(url);
+        const data = await res.json();
+        results = results.concat(data.content);
+        url = data.pageable?.nextPage || null;
+    }
+
+    return enrichDigimonList(results);
+}
+
+// Busca por nome diretamente
+async function searchDigimonsByName(query) {
+    const res = await fetch(`https://digi-api.com/api/v1/digimon/${query}`);
+    if (!res.ok) return [];
+    const data = await res.json();
+    return enrichDigimonList([data]);
+}
+
+// Função principal de busca
+digiApi.performSearch = async (query) => {
+    const lower = query.toLowerCase();
+
+    const isLevel = digimonLevels.find(l => l.toLowerCase() === lower);
+    const isAttribute = digimonAttributes.find(a => a.toLowerCase() === lower);
+    const isType = digimonTypes.find(t => t.toLowerCase() === lower);
+
+    if (isLevel) return await fetchAllFromCategory("level", isLevel);
+    if (isAttribute) return await fetchAllFromCategory("attribute", isAttribute);
+    if (isType) return await fetchAllFromCategory("type", isType);
+
+    return await searchDigimonsByName(lower);
+};
 
 // --- Funções Principais ---
 
-// Carrega os itens de Digimon com paginação
 function loadDigimonItems(page, size) {
     if (isSearchActive) return;
 
@@ -57,10 +112,8 @@ function loadDigimonItems(page, size) {
     });
 }
 
-// Realiza uma busca na lista de Digimons
 function searchDigimon() {
     const query = searchInput.value.trim().toLowerCase();
-
     if (query === "") {
         clearSearch();
         return;
@@ -73,16 +126,12 @@ function searchDigimon() {
 
     digiApi.performSearch(query).then(filteredList => {
         loadingIndicator.style.display = "none";
-        if (filteredList.length > 0) {
-            const newHtml = filteredList.map(digimonToLi).join("");
-            digimonList.innerHTML = newHtml;
-        } else {
-            digimonList.innerHTML = `<li class="search-message">No Digimon found.</li>`;
-        }
+        digimonList.innerHTML = filteredList.length > 0
+            ? filteredList.map(digimonToLi).join("")
+            : `<li class="search-message">No Digimon found.</li>`;
     });
 }
 
-// Limpa os resultados da busca e restaura a lista paginada
 function clearSearch() {
     searchInput.value = "";
     digimonList.innerHTML = "";
@@ -93,11 +142,8 @@ function clearSearch() {
 }
 
 // --- Event Listeners ---
-
 searchInput.addEventListener("keypress", (event) => {
-    if (event.key === "Enter") {
-        searchDigimon();
-    }
+    if (event.key === "Enter") searchDigimon();
 });
 
 digimonList.addEventListener('click', (event) => {
