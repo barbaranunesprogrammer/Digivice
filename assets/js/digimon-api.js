@@ -120,15 +120,16 @@ digiApi.performSearch = async (query) => {
     let categoryValue;
 
     if (level) {
-        categoryValue = level;
-        url = `https://digi-api.com/api/v1/digimon?level=${encodeURIComponent(categoryValue)}`;
-    } else if (attribute) {
-        categoryValue = attribute;
-        url = `https://digi-api.com/api/v1/digimon?attribute=${encodeURIComponent(categoryValue)}`;
-    } else if (type) {
-        categoryValue = type;
-        url = `https://digi-api.com/api/v1/digimon?type=${encodeURIComponent(categoryValue)}`;
-    }
+    categoryValue = level;
+    url = `https://digi-api.com/api/v1/digimon?level=${encodeURIComponent(categoryValue)}&pageSize=50`;
+} else if (attribute) {
+    categoryValue = attribute;
+    url = `https://digi-api.com/api/v1/digimon?attribute=${encodeURIComponent(categoryValue)}&pageSize=50`;
+} else if (type) {
+    categoryValue = type;
+    url = `https://digi-api.com/api/v1/digimon?type=${encodeURIComponent(categoryValue)}&pageSize=50`;
+}
+
 
     // Se uma URL de categoria foi encontrada, busca por ela
     if (url) {
