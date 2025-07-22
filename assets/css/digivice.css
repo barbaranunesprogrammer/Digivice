@@ -11,9 +11,11 @@
 }
 .champion {
   background-color: #e64a4a; /* Vermelho */
+  color: #fff;
 }
 .ultimate {
   background-color: #a85cf9; /* Roxo */
+  color: #fff;
 }
 .mega {
   background-color: #ffd700; /* Dourado */

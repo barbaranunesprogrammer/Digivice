@@ -22,7 +22,7 @@ function digimonToLi(digimon) {
                 <ol class="types">
                     <li class="type">${digimon.level}</li>
                     <li class="type">${digimon.actualType}</li>
-                    <li class="type">Attribute: ${digimon.attribute}</li>
+                    <li class="type">${digimon.attribute}</li>
                 </ol>
                 <img src="${digimon.photo}" alt="${digimon.name}">
             </div>
